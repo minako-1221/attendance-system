@@ -13,3 +13,10 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+docker/mysql/data/
+docker/mysql/data/*.*
+docker/mysql/data/#*
+docker/mysql/data/ib*
+docker/mysql/data/binlog.*
+docker/mysql/data/*-key.pem
+docker/mysql/data/*-cert.pem
