@@ -1,0 +1,44 @@
+.attendance-content{
+    margin: 0 auto;
+    padding: 30px 15px;
+    max-width: 1230px;
+    background: #f5f5f5f5;
+}
+
+.section__title{
+    margin: 0 auto;
+    width: 70%;
+    text-align: center;
+    align-items: center;
+    padding-bottom: 30px;
+}
+
+.section__grid{
+    margin: 0 auto;
+    width: 70%;
+    text-align: center;
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding-bottom: 50px;
+}
+
+.button__clock-in,
+.button__clock-out,
+.button__break-start,
+.button__break-end{
+    padding: 30px;
+    height: 150px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    background-color: #fff;
+    color: #a6a6a6;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.button__clock-in{
+    color: #000;
+}
