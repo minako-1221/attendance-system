@@ -17,9 +17,15 @@ use App\Http\Controllers\AuthController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [AuthController::class, 'index']);
+
     Route::get('/attendance', [AttendanceController::class, 'show']);
-    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn']);
-    Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut']);
-    Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart']);
-    Route::post('/attendance/break-end', [AttendanceController::class, 'breakEnd']);
+
+    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('clock.in');
+
+    Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('clock.out');
+
+    Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart'])->name('break.start');
+
+    Route::post('/attendance/break-end', [AttendanceController::class, 'breakEnd'])->name('break.end');
 });
+

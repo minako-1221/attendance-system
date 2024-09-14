@@ -48,6 +48,33 @@
     cursor: pointer;
 }
 
+.pagination{
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+.pagination li:not(.active){
+    border: 1px solid #E0DFDE;
+    padding: 4px;
+}
+
+.pagination li:not(:last-child){
+    border-right: none;
+}
+
+.pagination a{
+    color:#0000ff;
+    text-decoration: none;
+}
+
+.active{
+    padding: 4px;
+    border: 1px solid #8b7969;
+    background-color: #8B7969;
+    color: #0000ff;
+}
+
 .footer{
     background: #fff;
 }

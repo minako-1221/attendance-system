@@ -4,6 +4,10 @@
 <link rel="stylesheet" href="{{asset('css/attendance.css')}}">
 @endsection
 
+@section('js')
+<script src="{{ asset('js/attendance.js') }}" defer></script>
+@endsection
+
 @section('content')
 <div class="attendance__content">
     <div class="date-navigation">
@@ -21,25 +25,28 @@
                 <th class="attendance-table__header">勤務時間</th>
             </tr>
             @foreach($attendanceRecords as $record)
-            <tr class="attendance-table__row">
-                <td class="attendance-table__item">
-                    {{$record->user->name}}
-                </td>
-                <td class="attendance-table__item">
-                    {{$record->clock_in}}
-                </td>
-                <td class="attendance-table__item">
-                    {{$record->clock_out}}
-                </td>
-                <td class="attendance-table__item">
-                    {{$record->breakRecords->sum('break_total')}}
-                </td>
-                <td class="attendance-table__item">
-                    {{$record->effective_work_hours}}
-                </td>
-            </tr>
+                <tr class="attendance-table__row">
+                    <td class="attendance-table__item">
+                        {{$record->user->name}}
+                    </td>
+                    <td class="attendance-table__item">
+                        {{$record->clock_in}}
+                    </td>
+                    <td class="attendance-table__item">
+                        {{$record->clock_out}}
+                    </td>
+                    <td class="attendance-table__item">
+                        {{$record->breakRecords->sum('break_total')}}
+                    </td>
+                    <td class="attendance-table__item">
+                        {{$record->effective_work_hours}}
+                    </td>
+                </tr>
             @endforeach
         </table>
+    </div>
+    <div class="attendance-pagination">
+        {{$attendanceRecords->links('vendor.pagination.default')}}
     </div>
 </div>
 @endsection

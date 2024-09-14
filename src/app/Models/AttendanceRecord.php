@@ -8,6 +8,7 @@ use Carbon\Carbon;
 
 class AttendanceRecord extends Model
 {
+    use HasFactory;
     protected $table = 'attendance_records';
 
     protected $fillable = [
@@ -29,6 +30,10 @@ class AttendanceRecord extends Model
 
     public function getEffectiveWordHoursAttribute()
     {
+        if(!$this->clock_in || !$this->clock_out){
+            return 0;
+        }
+
         $clockIn = Carbon::parse($this->clock_in);
         $clockOut = Carbon::parse($this->clock_out);
         $breakTotal = $this->breakRecords->sum('break_total');
