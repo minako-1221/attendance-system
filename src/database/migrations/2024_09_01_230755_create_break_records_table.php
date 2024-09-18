@@ -18,7 +18,7 @@ class CreateBreakRecordsTable extends Migration
             $table->unsignedBigInteger('attendance_record_id');
             $table->dateTime('break_start');
             $table->dateTime('break_end');
-            $table->dateTime('break_total');
+            $table->integer('break_total');
             $table->timestamps();
 
             $table->foreign('attendance_record_id')->references('id')->on('attendance_records')->onDelete('cascade');
