@@ -17,8 +17,8 @@ class CreateAttendanceRecordsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->dateTime('clock_in')->nullable(false);
-            $table->dateTime('clock_out')->nullable(false);
-            $table->dateTime('clock_total')->nullable(false);
+            $table->dateTime('clock_out')->nullable();
+            $table->integer('clock_total')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -30,16 +30,16 @@
                         {{$record->user->name}}
                     </td>
                     <td class="attendance-table__item">
-                        {{$record->clock_in}}
+                        {{\Carbon\Carbon::parse($record->clock_in)->format('H:i:s')}}
                     </td>
                     <td class="attendance-table__item">
-                        {{$record->clock_out}}
+                        {{\Carbon\Carbon::parse($record->clock_out)->format('H:i:s')}}
                     </td>
                     <td class="attendance-table__item">
-                        {{$record->breakRecords->sum('break_total')}}
+                        {{gmdate('H:i:s',$record->breakRecords->sum('break_total'))}}
                     </td>
                     <td class="attendance-table__item">
-                        {{$record->effective_work_hours}}
+                        {{gmdate('H:i:s',$record->effective_work_hours)}}
                     </td>
                 </tr>
             @endforeach
