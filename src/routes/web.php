@@ -20,12 +20,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/attendance', [AttendanceController::class, 'show']);
 
-    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('clock.in');
+    Route::post('/clock-in', [AuthController::class, 'clockIn'])->name('clock.in');
 
-    Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('clock.out');
+    Route::post('/clock-out', [AuthController::class, 'clockOut'])->name('clock.out');
 
-    Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart'])->name('break.start');
+    Route::post('/break-start', [AuthController::class, 'breakStart'])->name('break.start');
 
-    Route::post('/attendance/break-end', [AttendanceController::class, 'breakEnd'])->name('break.end');
+    Route::post('/break-end', [AuthController::class, 'breakEnd'])->name('break.end');
 });
 

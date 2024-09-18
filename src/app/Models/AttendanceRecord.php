@@ -28,7 +28,7 @@ class AttendanceRecord extends Model
         return $this->hasMany(BreakRecord::class);
     }
 
-    public function getEffectiveWordHoursAttribute()
+    public function getEffectiveWorkHoursAttribute()
     {
         if(!$this->clock_in || !$this->clock_out){
             return 0;
