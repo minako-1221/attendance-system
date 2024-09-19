@@ -21,18 +21,18 @@
                 <nav>
                     <ul class="header-nav">
                         @if (Auth::check())
-                        <li class="header-nav__item">
-                            <a href="/" class="header-nav__link">ホーム</a>
-                        </li>
-                        <li class="header-nav__item">
-                            <a href="/attendance" class="header-nav__link">日付一覧</a>
-                        </li>
-                        <li class="header-nav__item">
-                            <form class="form__logout" action="/logout" method="post">
-                            @csrf
-                                <button class="header-nav__button">ログアウト</button>
-                            </form>
-                        </li>
+                            <li class="header-nav__item">
+                                <a href="/attendance" class="header-nav__link">ホーム</a>
+                            </li>
+                            <li class="header-nav__item">
+                                <a href="/attendance/records/{date?}" class="header-nav__link">日付一覧</a>
+                            </li>
+                            <li class="header-nav__item">
+                                <form class="form__logout" action="/logout" method="post">
+                                    @csrf
+                                    <button class="header-nav__button">ログアウト</button>
+                                </form>
+                            </li>
                         @endif
                     </ul>
                 </nav>
