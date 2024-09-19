@@ -16,16 +16,16 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [AuthController::class, 'index']);
+    Route::get('/attendance', [AuthController::class, 'index']);
 
-    Route::get('/attendance', [AttendanceController::class, 'show']);
+    Route::get('/attendance/records/{date?}', [AttendanceController::class, 'show'])->name('attendance.records');
 
-    Route::post('/clock-in', [AuthController::class, 'clockIn'])->name('clock.in');
+    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('clock.in');
 
-    Route::post('/clock-out', [AuthController::class, 'clockOut'])->name('clock.out');
+    Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('clock.out');
 
-    Route::post('/break-start', [AuthController::class, 'breakStart'])->name('break.start');
+    Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart'])->name('break.start');
 
-    Route::post('/break-end', [AuthController::class, 'breakEnd'])->name('break.end');
+    Route::post('/attendance/break-end', [AttendanceController::class, 'breakEnd'])->name('break.end');
 });
 

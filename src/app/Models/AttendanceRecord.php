@@ -38,8 +38,8 @@ class AttendanceRecord extends Model
         $clockOut = Carbon::parse($this->clock_out);
         $breakTotal = $this->breakRecords->sum('break_total');
 
-        $workHours = $clockOut->diffInMinutes($clockIn) - $breakTotal;
+        $workSeconds = $clockOut->diffInSeconds($clockIn) - $breakTotal;
 
-        return $workHours;
+        return $workSeconds;
     }
 }

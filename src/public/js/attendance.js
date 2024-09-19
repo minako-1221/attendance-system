@@ -17,8 +17,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // 日付を更新する関数
     function updateDate() {
         const year = currentDate.getFullYear();
-        const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 月は0から始まるので+1
+        const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
         const day = ('0' + currentDate.getDate()).slice(-2);
-        dateElement.textContent = `${year}-${month}-${day}`;
+        const formattedDate = '${year}-${month}-${day}';
+        dateElement.textContent = formattedDate;
+
+        fetch('/attendance/records/${formattedDate}').then(response => response.text()).then(html => {
+            document.querySelector('attendance__content').innerHTML = html;
+        })
     }
+    updateDate();
 });

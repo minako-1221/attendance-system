@@ -12,7 +12,7 @@
 <div class="attendance__content">
     <div class="date-navigation">
         <button id="prev-date" class="date-nav__button">&lt;</button>
-        <span id="current-date">{{ \Carbon\Carbon::now()->format('Y-m-d') }}</span>
+        <span id="current-date" data-date="{{$date}}">{{$date}}</span>
         <button id="next-date" class="date-nav__button">&gt;</button>
     </div>
     <div class="attendance-table">
@@ -36,10 +36,10 @@
                         {{\Carbon\Carbon::parse($record->clock_out)->format('H:i:s')}}
                     </td>
                     <td class="attendance-table__item">
-                        {{gmdate('H:i:s',$record->breakRecords->sum('break_total'))}}
+                        {{gmdate('H:i:s', $record->breakRecords->sum('break_total'))}}
                     </td>
                     <td class="attendance-table__item">
-                        {{gmdate('H:i:s',$record->effective_work_hours)}}
+                        {{gmdate('H:i:s', $record->effective_work_hours)}}
                     </td>
                 </tr>
             @endforeach
