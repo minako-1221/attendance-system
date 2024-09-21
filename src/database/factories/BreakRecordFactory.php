@@ -17,14 +17,22 @@ class BreakRecordFactory extends Factory
     protected $model = BreakRecord::class;
     public function definition()
     {
-        $breakStart = Carbon::now()->subDays(rand(1, 30))->addHours(rand(1, 8));
-        $breakEnd = (clone $breakStart)->addMinutes(rand(15, 60));
+        $attendance = AttendanceRecord::inRandomOrder()->first();
+
+        $clockIn = Carbon::parse($attendance->clock_in);
+
+        $clockOut = Carbon::parse($attendance->clock_out);
+
+        $breakStart = $clockIn
+        ->addSeconds(rand(0,$clockOut->diffInSeconds($clockIn)-3600));
+
+        $breakEnd = (clone $breakStart)->addSeconds(rand(900, 3600));
 
         return [
-            'attendance_record_id'=>AttendanceRecord::inRandomOrder()->first()->id,
+            'attendance_record_id'=>$attendance->id,
             'break_start'=>$breakStart,
             'break_end'=>$breakEnd,
-            'break_total'=>$breakEnd->diffInMinutes($breakStart),
+            'break_total'=>$breakEnd->diffInSeconds($breakStart),
         ];
     }
 }

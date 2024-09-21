@@ -64,7 +64,7 @@ class AttendanceController extends Controller
 
         $breakRecords->break_end = Carbon::now();
 
-        $breakRecords->break_total = Carbon::parse($breakRecords->break_start)->diff(Carbon::now());
+        $breakRecords->break_total = Carbon::parse($breakRecords->break_start)->diffInSeconds(Carbon::now());
 
         $breakRecords->save();
 
@@ -80,6 +80,10 @@ class AttendanceController extends Controller
 
         $attendanceRecords = AttendanceRecord::whereDate('clock_in', $date)
             ->with('user', 'breakRecords')->paginate(5);
+
+        if($request->ajax()){
+            return view('_records', compact('attendanceRecords'));
+        }
 
         return view('attendance', compact('user', 'attendanceRecords', 'date'));
     }

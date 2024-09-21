@@ -17,8 +17,11 @@ class AttendanceRecordFactory extends Factory
     protected $model = AttendanceRecord::class;
     public function definition()
     {
-        $clockIn = Carbon::now()->subDays(rand(1, 30))->subHours(rand(1, 8));
-        $clockOut = (clone $clockIn)->addHours(rand(4, 8));
+        $clockIn = Carbon::now()
+        ->subDays(rand(1, 30))->setTime(rand(8, 11),rand(0,59),rand(0,59));
+
+        $clockOut = (clone $clockIn)
+        ->addHours(rand(4, 8))->addMinutes(rand(0,59))->addSeconds(rand(0,59));
 
         $user = User::inRandomOrder()->first();
         if(!$user){

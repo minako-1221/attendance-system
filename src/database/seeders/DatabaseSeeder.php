@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
 use App\Models\AttendanceRecord;
 use App\Models\BreakRecord;
 
@@ -15,12 +16,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        AttendanceRecord::factory(100)->create()->each(function ($attendanceRecord) {
-            BreakRecord::factory(rand(1, 3))->create([
-                'attendance_record_id' => $attendanceRecord->id,
-            ]);
+        $users = User::factory(10)->create();
+
+        $users->each(function ($user) {
+            AttendanceRecord::factory(5)->create(['user_id' => $user->id])
+                ->each(function ($attendanceRecord) {
+                    BreakRecord::factory(2)->create(['attendance_record_id' => $attendanceRecord->id]);
+                });
         });
 
-        $this->call(UserSeeder::class);
     }
 }
