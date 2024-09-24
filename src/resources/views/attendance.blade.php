@@ -17,4 +17,5 @@
     </div>
     @include('_records', ['attendanceRecords' => $attendanceRecords])
 </div>
+
 @endsection

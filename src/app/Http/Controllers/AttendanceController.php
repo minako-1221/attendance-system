@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\AttendanceRecord;
 use App\Models\BreakRecord;
 use Illuminate\Http\Request;
@@ -76,16 +77,16 @@ class AttendanceController extends Controller
 
         $date = $request->input('date', Carbon::today()->toDateString());
 
-        DB::enableQueryLog();
+        $users = User::with('attendanceRecords.breakRecords')->paginate(5);
 
         $attendanceRecords = AttendanceRecord::whereDate('clock_in', $date)
-            ->with('user', 'breakRecords')->paginate(5);
+            ->with('user','breakRecords');
 
         if($request->ajax()){
-            return view('_records', compact('attendanceRecords'));
+            return view('_records', compact('attendanceRecords','users'));
         }
 
-        return view('attendance', compact('user', 'attendanceRecords', 'date'));
+        return view('attendance', compact('users', 'attendanceRecords','date'));
     }
 
 }
