@@ -18,7 +18,7 @@ use App\Http\Controllers\AuthController;
 Route::middleware('auth')->group(function () {
     Route::get('/attendance', [AuthController::class, 'index']);
 
-    Route::get('/attendance/records/{date?}', [AttendanceController::class, 'show'])->name('attendance.records');
+    Route::get('/records', [AttendanceController::class, 'show'])->name('attendance.records');
 
     Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('clock.in');
 

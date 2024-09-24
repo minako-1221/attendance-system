@@ -23,15 +23,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const formattedDate = `${year}-${month}-${day}`;
         dateElement.textContent = formattedDate;
 
-        fetch(`/attendance/records/${formattedDate}`)
-            .then(response => response.text())
-            .then(html => {
-                document.querySelector('attendance__content').innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error fetching attendance records:', error);
-            });
-
+        //fetch(`/records/${formattedDate}?_=${new Date().getTime()}`)
+            //.then(response => {
+                //if (!response.ok) {
+                    //throw new Error('Network response was not ok');
+                //}
+                //return response.text();
+            //})
+            //.then(html => {
+                //document.querySelector('attendance__content').innerHTML = html;
+            //})
+            //.catch(error => {
+                //console.error('Error fetching attendance records:', error);
+            //});
     }
     updateDate();
 });

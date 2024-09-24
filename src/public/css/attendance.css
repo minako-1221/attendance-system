@@ -7,21 +7,27 @@
 }
 
 .date-navigation{
+    display: flex;
     margin: 0 auto;
     padding: 15px 20px;
-    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 .date-nav__button{
+    width: 25px;
+    height: 20px;
     background-color: #fff;
     border: 1px solid #0000ff;
     color: #0000ff;
+    cursor: pointer;
 }
 
 #current-date{
     font-weight: bold;
     padding: 0 20px;
     font-size: 20px;
+    align-items: center;
 }
 
 .attendance-table{
@@ -49,4 +55,40 @@
     padding: 20px;
     width: 20%;
     text-align: left;
+}
+
+.disabled,.page{
+    margin: 0 1px;
+    width: 35px;
+    background-color: #fff;
+    color: #0000ff;
+    text-align: center;
+    cursor: pointer;
+
+}
+
+.active{
+    margin: 0 1px;
+    width: 35px;
+    background-color: #0000ff;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+}
+
+.arrow-active{
+    margin: 0 1px;
+    width: 20px;
+    background-color: #fff;
+    color: #0000ff;
+    text-align: center;
+    cursor: pointer;
+}
+
+.arrow {
+    margin: 0 1px;
+    width: 20px;
+    background-color: #fff;
+    color: #0000ff;
+    text-align: center;
 }
