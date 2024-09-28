@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{asset('css/index.css')}}" />
+<link rel="stylesheet" href="{{ asset('css/index.css') }}" />
 @endsection
 
 @section('js')
@@ -12,7 +12,7 @@
 <div class="attendance-content">
     <div class="section__title">
         @if($user)
-            <h2>{{$user->name}}さんお疲れ様です！</h2>
+            <h2>{{ $user->name }}さんお疲れ様です！</h2>
         @endif
     </div>
     <div class="section__grid">

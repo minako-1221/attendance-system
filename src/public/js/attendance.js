@@ -1,16 +1,17 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const dateElement = document.getElementById('current-date');
-
     let currentDate = new Date(dateElement.textContent);
 
+    const cache = {};
+
     // 前日ボタン
-    document.getElementById('prev-date').addEventListener('click', function() {
+    document.getElementById('prev-date').addEventListener('click', function () {
         currentDate.setDate(currentDate.getDate() - 1);
         updateDate();
     });
 
     // 翌日ボタン
-    document.getElementById('next-date').addEventListener('click', function() {
+    document.getElementById('next-date').addEventListener('click', function () {
         currentDate.setDate(currentDate.getDate() + 1);
         updateDate();
     });
@@ -23,19 +24,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const formattedDate = `${year}-${month}-${day}`;
         dateElement.textContent = formattedDate;
 
-        //fetch(`/records/${formattedDate}?_=${new Date().getTime()}`)
-            //.then(response => {
-                //if (!response.ok) {
-                    //throw new Error('Network response was not ok');
-                //}
-                //return response.text();
-            //})
-            //.then(html => {
-                //document.querySelector('attendance__content').innerHTML = html;
-            //})
-            //.catch(error => {
-                //console.error('Error fetching attendance records:', error);
-            //});
-    }
-    updateDate();
+        if (cache[formattedDate]) {
+            document.querySelector('.attendance__content').innerHTML = cache[formattedDate];
+        } else {
+            document.querySelector('.attendance__content').innerHTML = '<p>Loading...</p>';
+
+            fetch(`/records`)
+            .then(response => response.text())
+            .then(html => {
+                cache[formattedDate] = html;
+                document.querySelector('.attendance__content').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                document.querySelector('.attendance__content').innerHTML = '<p>Error loading data.</p>';
+            });
+
+
+        }
+
+    };
 });
