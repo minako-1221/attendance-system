@@ -6,6 +6,14 @@
 
 @section('js')
 <script src="{{ asset('js/index.js') }}" defer></script>
+<script>
+    window.buttonState = {
+            clock_in: @json(session('clock_in', false)),
+            clock_out: @json(session('clock_out', false)),
+            break_start: @json(session('break_start', false)),
+            break_end: @json(session('break_end', false)),
+        };
+</script>
 @endsection
 
 @section('content')
@@ -16,22 +24,22 @@
         @endif
     </div>
     <div class="section__grid">
-            <form action="{{ route('clock.in') }}" method="POST">
-                @csrf
-                <button class="button__clock-in">勤務開始</button>
-            </form>
-            <form action="{{ route('clock.out') }}" method="POST">
-                @csrf
-                <button class="button__clock-out">勤務終了</button>
-            </form>
-            <form action="{{ route('break.start') }}" method="POST">
-                @csrf
-                <button class="button__break-start">休憩開始</button>
-            </form>
-            <form action="{{ route('break.end') }}" method="POST">
-                @csrf
-                <button class="button__break-end">休憩終了</button>
-            </form>
+        <form action="{{ route('clock.in') }}" method="POST">
+            @csrf
+            <button class="button__clock-in">勤務開始</button>
+        </form>
+        <form action="{{ route('clock.out') }}" method="POST">
+            @csrf
+            <button class="button__clock-out">勤務終了</button>
+        </form>
+        <form action="{{ route('break.start') }}" method="POST">
+            @csrf
+            <button class="button__break-start">休憩開始</button>
+        </form>
+        <form action="{{ route('break.end') }}" method="POST">
+            @csrf
+            <button class="button__break-end">休憩終了</button>
+        </form>
     </div>
 </div>
 

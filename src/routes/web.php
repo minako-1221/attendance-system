@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 
@@ -16,16 +17,15 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::middleware('auth')->group(function () {
-    Route::get('/attendance', [AuthController::class, 'index']);
+    Route::get('/', [AuthController::class, 'index']);
 
-    Route::get('/records', [AttendanceController::class, 'show'])->name('attendance.records');
+    Route::get('/attendance', [AttendanceController::class, 'show'])->name('attendance.records');
 
-    Route::post('/attendance/clock-in', [AuthController::class, 'clockIn'])->name('clock.in');
+    Route::post('/clock-in', [AttendanceController::class, 'clockIn'])->name('clock.in');
 
-    Route::post('/attendance/clock-out', [AuthController::class, 'clockOut'])->name('clock.out');
+    Route::post('/clock-out', [AttendanceController::class, 'clockOut'])->name('clock.out');
 
-    Route::post('/attendance/break-start', [AuthController::class, 'breakStart'])->name('break.start');
+    Route::post('/break-start', [AttendanceController::class, 'breakStart'])->name('break.start');
 
-    Route::post('/attendance/break-end', [AuthController::class, 'breakEnd'])->name('break.end');
+    Route::post('/break-end', [AttendanceController::class, 'breakEnd'])->name('break.end');
 });
-
