@@ -15,7 +15,13 @@
         <span id="current-date" data-date="{{ $date }}">{{ $date }}</span>
         <button id="next-date" class="date-nav__button">&gt;</button>
     </div>
-    @include('_records', ['attendanceRecords' => $attendanceRecords,'users'=>$users])
+    @include('_records', ['attendanceRecords' => $paginatedAttendanceRecords, 'users' => $users])
+    <div class="attendance-pagination">
+        {{$users->links('vendor.pagination.default')}}
+        @if ($paginatedAttendanceRecords->count())
+            {{$paginatedAttendanceRecords->links('vendor.pagination.default')}}
+        @endif
+    </div>
 </div>
 
 @endsection

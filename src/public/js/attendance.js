@@ -17,19 +17,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 日付を更新する関数
-    function updateDate() {
+    function updateDate(dayChange) {
+
+        currentDate.setDate(currentDate.getDate() + dayChange);
+
         const year = currentDate.getFullYear();
         const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
         const day = ('0' + currentDate.getDate()).slice(-2);
         const formattedDate = `${year}-${month}-${day}`;
+
         dateElement.textContent = formattedDate;
 
         if (cache[formattedDate]) {
-            document.querySelector('.attendance__content').innerHTML = cache[formattedDate];
+            document.querySelector('.attendance-table').innerHTML = cache[formattedDate];
         } else {
-            document.querySelector('.attendance__content').innerHTML = '<p>Loading...</p>';
+            document.querySelector('.attendance-table').innerHTML = '<p>Loading...</p>';
 
-            fetch(`/records`)
+            fetch(`/records/${formattedDate}`)
             .then(response => response.text())
             .then(html => {
                 cache[formattedDate] = html;
@@ -39,8 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error fetching data:', error);
                 document.querySelector('.attendance__content').innerHTML = '<p>Error loading data.</p>';
             });
-
-
         }
 
     };

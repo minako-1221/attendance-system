@@ -16,9 +16,9 @@ class CreateBreakRecordsTable extends Migration
         Schema::create('break_records', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('attendance_record_id');
-            $table->dateTime('break_start');
-            $table->dateTime('break_end');
-            $table->integer('break_total');
+            $table->dateTime('break_start')->nullable();
+            $table->dateTime('break_end')->nullable();
+            $table->integer('break_total')->nullable();
             $table->timestamps();
 
             $table->foreign('attendance_record_id')->references('id')->on('attendance_records')->onDelete('cascade');

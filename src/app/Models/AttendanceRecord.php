@@ -30,7 +30,7 @@ class AttendanceRecord extends Model
 
     public function getEffectiveWorkHoursAttribute()
     {
-        if(!$this->clock_in || !$this->clock_out){
+        if (!$this->clock_in || !$this->clock_out) {
             return 0;
         }
 

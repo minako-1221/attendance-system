@@ -8,6 +8,11 @@
             <th class="attendance-table__header">勤務時間</th>
         </tr>
         @foreach($users as $user)
+            @php
+                $attendanceRecord=$user->attendanceRecords->where('clock_in', '>=', \Carbon\Carbon::parse($date)->startOfDay())
+                    ->where('clock_in', '<=', \Carbon\Carbon::parse($date)->endOfDay())
+                    ->first();
+            @endphp
                 <tr class="attendance-table__row">
                     <td class="attendance-table__item">
                         {{$user->name}}
@@ -44,7 +49,4 @@
                 </tr>
         @endforeach
     </table>
-</div>
-<div class="attendance-pagination">
-    {{$users->links('vendor.pagination.default')}}
 </div>

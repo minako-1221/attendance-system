@@ -14,6 +14,6 @@ class LoginResponse implements LoginResponseContract
      */
     public function toResponse($request)
     {
-        return redirect('/attendance');  // ログイン後にリダイレクトするURLを指定
+        return redirect('/');  // ログイン後にリダイレクトするURLを指定
     }
 }

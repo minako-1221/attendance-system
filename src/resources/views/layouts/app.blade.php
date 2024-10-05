@@ -22,13 +22,13 @@
                     <ul class="header-nav">
                         @if (Auth::check())
                             <li class="header-nav__item">
-                                <a href="/attendance" class="header-nav__link">ホーム</a>
+                                <a href="/" class="header-nav__link">ホーム</a>
                             </li>
                             <li class="header-nav__item">
-                                <a href="/records" class="header-nav__link">日付一覧</a>
+                                <a href="/attendance" class="header-nav__link">日付一覧</a>
                             </li>
                             <li class="header-nav__item">
-                                <form class="form__logout" action="/logout" method="post">
+                                <form class="form__logout" action="{{ route('logout') }}" method="post">
                                     @csrf
                                     <button class="header-nav__button">ログアウト</button>
                                 </form>

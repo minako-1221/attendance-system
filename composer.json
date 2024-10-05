@@ -1,0 +1,17 @@
+{
+    "name": "tatsukawashogo/attendance-system",
+    "description": "Attendance management system",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Tatsukawashogo\\AttendanceSystem\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "minako tatsukawa",
+            "email": "ex.ja.bs@gmail.com"
+        }
+    ],
+    "require": {}
+}
