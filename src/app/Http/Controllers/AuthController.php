@@ -19,7 +19,7 @@ class AuthController extends Controller
 
         $sessionDate = session('last_date', null);
 
-        if($sessionDate !== $today){
+        if ($sessionDate !== $today) {
             session([
                 'clock_in' => false,
                 'clock_out' => false,
@@ -36,7 +36,7 @@ class AuthController extends Controller
             'break_end' => session('break_end', false),
         ];
 
-        return view('index',compact('user','buttonStates'));
+        return view('index', compact('user', 'buttonStates'));
     }
 
 }

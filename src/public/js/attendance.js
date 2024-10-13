@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             document.querySelector('.attendance-table').innerHTML = '<p>Loading...</p>';
 
-            fetch(`/records/${formattedDate}`)
+            fetch(`/attendance`)
             .then(response => response.text())
             .then(html => {
                 cache[formattedDate] = html;
