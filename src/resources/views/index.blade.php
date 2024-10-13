@@ -5,16 +5,12 @@
 @endsection
 
 @section('js')
-<script src="{{ asset('js/index.js') }}" defer></script>
-<script>
-    window.buttonState = {
-            clock_in: @json(session('clock_in', false)),
-            clock_out: @json(session('clock_out', false)),
-            break_start: @json(session('break_start', false)),
-            break_end: @json(session('break_end', false)),
-        };
+<script id="button-states" type="application/json">
+    @json($buttonStates)
 </script>
+<script src="{{ asset('js/index.js') }}" defer></script>
 @endsection
+
 
 @section('content')
 <div class="attendance-content">

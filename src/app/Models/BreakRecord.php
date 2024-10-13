@@ -18,30 +18,26 @@ class BreakRecord extends Model
         'break_total',
     ];
 
+    protected $casts = [
+        'break_start' => 'datetime',
+        'break_end' => 'datetime',
+    ];
+
     public function attendanceRecord()
     {
         return $this->belongsTo(AttendanceRecord::class);
-    }
-
-    public function getBreakTotalAttribute()
-    {
-        if($this->break_start && $this->break_end){
-            $breakStart = Carbon::parse($this->break_start);
-            $breakEnd = Carbon::parse($this->break_end);
-            return $breakEnd->diffInSeconds($breakStart);
-        }
-        return 0;
     }
 
     public function setBreakEndAttribute($value)
     {
         $this->attributes['break_end'] = $value;
 
-        if($this->break_start){
-            $breakStart = Carbon::parse($this->break_start);
-            $breakEnd = Carbon::parse($value);
+        if ($this->break_start) {
+            $breakStart = $this->break_start;
+            $breakEnd = $value;
             $this->attributes['break_total'] = $breakEnd->diffInSeconds($breakStart);
+            $this->save();
         }
     }
-}
 
+}

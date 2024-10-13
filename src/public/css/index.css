@@ -35,11 +35,14 @@
     font-weight: bold;
     border: none;
     background-color: #fff;
-    color: #a6a6a6;
-    cursor: pointer;
     border-radius: 3px;
+    color: gray;
+    cursor: pointer;
 }
 
-.button__clock-in{
-    color: #000;
+.button__clock-in:disabled,
+.button__clock-out:disabled,
+.button__break-start:disabled,
+.button__break-end:disabled {
+    cursor: not-allowed;
 }
