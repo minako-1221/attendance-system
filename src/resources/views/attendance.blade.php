@@ -16,9 +16,11 @@
         <span id="current-date" data-date="{{ $date }}">{{ $date }}</span>
         <button id="next-date" class="date-nav__button">&gt;</button>
     </div>
-    @include('_records', ['attendanceRecord' => $attendanceRecord, 'users' => $users])
+    <div id="attendance-records">
+        @include('_records', ['attendanceRecord' => $attendanceRecord, 'users' => $users])
+    </div>
     <div class="attendance-pagination">
-        {{$users->links('vendor.pagination.default')}}
+        {{$users->appends(['date' => $date])->links('vendor.pagination.default')}}
     </div>
 </div>
 

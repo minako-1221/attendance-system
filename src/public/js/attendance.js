@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const dateElement = document.getElementById('current-date');
-    let currentDate = new Date(dateElement.textContent);
+    let currentDate = new Date(dateElement.dataset.date);
 
     const cache = {};
 
@@ -17,9 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 日付を更新する関数
-    function updateDate(dayChange) {
-
-        currentDate.setDate(currentDate.getDate() + dayChange);
+    function updateDate() {
 
         const year = currentDate.getFullYear();
         const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
@@ -28,22 +26,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
         dateElement.textContent = formattedDate;
 
+        const newUrl = `/attendance?date=${formattedDate}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+
+        // キャッシュに存在するか確認
         if (cache[formattedDate]) {
             document.querySelector('.attendance-table').innerHTML = cache[formattedDate];
         } else {
             document.querySelector('.attendance-table').innerHTML = '<p>Loading...</p>';
 
-            fetch(`/attendance`)
+            // fetchリクエストに日付を追加
+            fetch(newUrl, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
             .then(response => response.text())
             .then(html => {
                 cache[formattedDate] = html;
-                document.querySelector('.attendance__content').innerHTML = html;
+                document.querySelector('.attendance-table').innerHTML = html;
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
-                document.querySelector('.attendance__content').innerHTML = '<p>Error loading data.</p>';
+                document.querySelector('.attendance-table').innerHTML = '<p>Error loading data.</p>';
             });
         }
-
     };
 });

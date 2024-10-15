@@ -135,8 +135,9 @@ class AttendanceController extends Controller
             ->first();
 
         if ($request->ajax()) {
-            return view('_records', compact('attendanceRecord', 'users'));
+            return view('_records', compact('attendanceRecord', 'users', 'date'));
         }
+
         return view('attendance', compact('users', 'attendanceRecord', 'date'));
     }
 
