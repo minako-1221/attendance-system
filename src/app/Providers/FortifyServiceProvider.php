@@ -8,6 +8,7 @@ use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Actions\Fortify\LoginResponse;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -38,6 +39,21 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::loginView(function () {
             return view('auth.login');
+        });
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $validator = Validator::make($request->all(), [
+                'email' => ['required', 'email', 'string', 'max:255'],
+                'password' => ['required', 'string', 'min:8', 'max:255'],
+            ]);
+
+            $validator->validate();
+
+            $user = \App\Models\User::where('email', $request->email)->first();
+
+            if ($user && \Hash::check($request->password, $user->password)) {
+                return $user;
+            }
         });
 
         RateLimiter::for('login', function (Request $request) {
