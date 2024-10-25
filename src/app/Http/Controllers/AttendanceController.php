@@ -122,12 +122,13 @@ class AttendanceController extends Controller
         $user = Auth::user();
 
         $date = $request->input('date', Carbon::today()->toDateString());
+        $page = $request->input('page', 1);
 
         $users = User::with([
             'attendanceRecords' => function ($query) use ($date) {
                 $query->whereDate('clock_in', $date)->with('breakRecords');
             }
-        ])->paginate(5);
+        ])->paginate(5)->appends(['date' => $date]);
 
         $attendanceRecord = AttendanceRecord::where('user_id', $user->id)
             ->whereDate('clock_in', $date)
