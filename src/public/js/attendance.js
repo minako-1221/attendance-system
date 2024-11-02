@@ -2,19 +2,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateElement = document.getElementById('current-date');
     let currentDate = new Date(dateElement.dataset.date);
 
-    // 現在のページ番号を取得する関数
+    function highlightCurrentPage(page) {
+        document.querySelectorAll('.pagination a').forEach(link => {
+            const url = new URL(link.href);
+            const linkPage = url.searchParams.get('page');
+            link.classList.toggle('active', linkPage == page);
+            link.classList.toggle('page', linkPage != page);
+        });
+    }
+
     function getCurrentPage() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('page') || 1;  // デフォルトは1ページ目
+        return new URLSearchParams(window.location.search).get('page') || 1;
     }
 
-    // 現在の日付を取得する関数
-    function getCurrentDate() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('date') || formatDate(currentDate); // デフォルトは今日の日付
-    }
-
-    // 日付をフォーマットする関数
     function formatDate(date) {
         const year = date.getFullYear();
         const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -22,50 +22,94 @@ document.addEventListener('DOMContentLoaded', function () {
         return `${year}-${month}-${day}`;
     }
 
-    // 前日ボタン
-    document.getElementById('prev-date').addEventListener('click', function () {
-        currentDate.setDate(currentDate.getDate() - 1);
-        updateDate();
-    });
-
-    // 翌日ボタン
-    document.getElementById('next-date').addEventListener('click', function () {
-        currentDate.setDate(currentDate.getDate() + 1);
-        updateDate();
-    });
-
-    // 日付を更新する関数
-    function updateDate(pushState = true) {  // pushStateがtrueならURLを更新
+    function updateDate(pushState = true) {
         const formattedDate = formatDate(currentDate);
-
-        // 日付をHTMLに反映
         dateElement.textContent = formattedDate;
-
-        // ページ番号をクエリパラメータに含める
-        const currentPage = getCurrentPage();  // 現在のページ番号
-        const newUrl = `/attendance?date=${formattedDate}&page=${currentPage}`;  // 日付とページをURLに含める
+        const currentPage = getCurrentPage();
+        const newUrl = `/attendance?date=${formattedDate}&page=${currentPage}`;
 
         if (pushState) {
             window.history.pushState({ path: newUrl }, '', newUrl);
         }
 
-        // Ajaxでデータを取得して更新
-        fetch(newUrl, {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(response => response.text())
-        .then(html => {
-            document.querySelector('.attendance-table').innerHTML = html;
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
+        fetch(newUrl, { method: 'GET', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const attendanceTable = doc.querySelector('.attendance-table');
+                const pagination = doc.querySelector('.pagination');
+
+                // 必要なHTML要素が存在する場合のみ更新
+                if (attendanceTable) {
+                    document.querySelector('.attendance-table').innerHTML = attendanceTable.innerHTML;
+                } else {
+                    console.warn('Attendance table not found in response.');
+                }
+                if (pagination) {
+                    document.querySelector('.pagination').innerHTML = pagination.innerHTML;
+                } else {
+                    console.warn('Pagination not found in response.');
+                }
+
+                setupPaginationLinks();
+                highlightCurrentPage(currentPage);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function setupPaginationLinks() {
+        document.querySelectorAll('.pagination a').forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                const page = new URL(link.href).searchParams.get('page');
+                if (page) updatePage(page);
+            });
         });
     }
 
-    // 初回読み込み時にURLから日付を取得し、反映
-    const initialDate = getCurrentDate();
-    const [year, month, day] = initialDate.split('-');  // 日付文字列を分割
-    currentDate = new Date(year, month - 1, day);  // 月は0始まり
-    updateDate(false);  // ページ読み込み時にpushStateは不要
+    function updatePage(page) {
+        const formattedDate = formatDate(currentDate);
+        const newUrl = `/attendance?date=${formattedDate}&page=${page}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+
+        fetch(newUrl, { method: 'GET', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(response => response.text())
+            .then(html => {
+                console.log('Response HTML:', html);
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const attendanceTable = doc.querySelector('.attendance-table');
+                const pagination = doc.querySelector('.pagination');
+
+                if (attendanceTable) {
+                    document.querySelector('.attendance-table').innerHTML = attendanceTable.innerHTML;
+                } else {
+                    console.warn('Attendance table not found in response.');
+                }
+                if (pagination) {
+                    document.querySelector('.pagination').innerHTML = pagination.innerHTML;
+                } else {
+                    console.warn('Pagination not found in response.');
+                }
+
+                setupPaginationLinks();
+                highlightCurrentPage(page);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    document.getElementById('prev-date').addEventListener('click', () => {
+        currentDate.setDate(currentDate.getDate() - 1);
+        updateDate();
+    });
+
+    document.getElementById('next-date').addEventListener('click', () => {
+        currentDate.setDate(currentDate.getDate() + 1);
+        updateDate();
+    });
+
+    setupPaginationLinks();
+    highlightCurrentPage(getCurrentPage());
+    updateDate(false);
 });
