@@ -19,9 +19,6 @@
     <div id="attendance-records">
         @include('_records', ['attendanceRecord' => $attendanceRecord, 'users' => $users])
     </div>
-    <div class="attendance-pagination">
-        {{$users->appends(['date' => $date])->links('vendor.pagination.default')}}
-    </div>
 </div>
 
 @endsection

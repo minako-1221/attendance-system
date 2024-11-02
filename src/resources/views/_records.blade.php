@@ -9,18 +9,18 @@
         </tr>
         @foreach($users as $user)
                         @php
-                            $attendanceRecord = $user->attendanceRecords
-                                ->where('clock_in', '>=', \Carbon\Carbon::parse($date)->startOfDay())
-                                ->where('clock_in', '<=', \Carbon\Carbon::parse($date)->endOfDay())
-                                ->first();
+    $attendanceRecord = $user->attendanceRecords
+        ->where('clock_in', '>=', \Carbon\Carbon::parse($date)->startOfDay())
+        ->where('clock_in', '<=', \Carbon\Carbon::parse($date)->endOfDay())
+        ->first();
 
-                            $breakRecords = $attendanceRecord
-                                ? $attendanceRecord->breakRecords
-                                    ->where('created_at', '>=', \Carbon\Carbon::parse($date)->startOfDay())
-                                    ->where('created_at', '<=', \Carbon\Carbon::parse($date)->endOfDay())
-                                : collect();
+    $breakRecords = $attendanceRecord
+        ? $attendanceRecord->breakRecords
+            ->where('created_at', '>=', \Carbon\Carbon::parse($date)->startOfDay())
+            ->where('created_at', '<=', \Carbon\Carbon::parse($date)->endOfDay())
+        : collect();
 
-                                $totalBreakTime = $breakRecords->sum('break_total');
+    $totalBreakTime = $breakRecords->sum('break_total');
                         @endphp
                         <tr class="attendance-table__row">
                             <td class="attendance-table__item">
@@ -57,4 +57,8 @@
                         </tr>
         @endforeach
     </table>
+</div>
+
+<div class="attendance-pagination">
+    {{$users->appends(['date' => $date])->links('vendor.pagination.default')}}
 </div>
