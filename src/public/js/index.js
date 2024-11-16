@@ -11,6 +11,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // ダブルクリック防止用の関数
+    function preventDoubleClick(button) {
+        button.disabled = true; // ボタンを無効化
+        setTimeout(() => {
+            button.disabled = false; // クリック後、1秒後にボタンを有効化
+        }, 1000); // 1秒後にボタンを有効化
+    }
+
     // 初期状態のボタンの設定
     function initializeButtonStates() {
         // 勤務終了が押されている場合は全てのボタンを無効化

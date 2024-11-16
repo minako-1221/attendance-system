@@ -7,7 +7,9 @@ use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Actions\Fortify\LoginResponse;
+use App\Http\Controllers\Auth\CustomLoginController;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -18,17 +20,27 @@ use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
+    public function register()
     {
-        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
+        $this->app->singleton(LoginResponseContract::class, function () {
+            return new class implements LoginResponseContract {
+                public function toResponse($request)
+                {
+                    // 認証済みかどうかを確認
+                    //if (Auth::check() && !Auth::user()->hasVerifiedEmail()) {
+                        //Auth::logout(); // ログアウト
+
+                        //return redirect()->route('verification.notice')
+                            //->with('status', 'メール確認が必要です。リンクを確認して再度ログインしてください。');
+                    //}
+
+                    //return redirect()->intended(Fortify::redirects('login'));
+                    return redirect('/');
+                }
+            };
+        });
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Fortify::createUsersUsing(CreateNewUser::class);
