@@ -157,4 +157,20 @@ return [
         ]),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Redirects After Authentication
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the paths to which users will be redirected after
+    | successful registration or login. You can change these values to your
+    | preferred routes after the user has been successfully authenticated.
+    |
+    */
+
+    'redirects' => [
+        'register' => '/login', // 会員登録後にログイン画面にリダイレクト
+        'login' => RouteServiceProvider::HOME, // ログイン後のリダイレクト先
+    ],
+
 ];

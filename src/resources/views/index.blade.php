@@ -22,19 +22,27 @@
     <div class="section__grid">
         <form action="{{ route('clock.in') }}" method="POST">
             @csrf
-            <button class="button__clock-in">勤務開始</button>
+            <button class="button__clock-in" @if(!$buttonStates->clock_in) disabled @endif>
+                勤務開始
+            </button>
         </form>
         <form action="{{ route('clock.out') }}" method="POST">
             @csrf
-            <button class="button__clock-out">勤務終了</button>
+            <button class="button__clock-out" @if(!$buttonStates->clock_out) disabled @endif>
+                勤務終了
+            </button>
         </form>
         <form action="{{ route('break.start') }}" method="POST">
             @csrf
-            <button class="button__break-start">休憩開始</button>
+            <button class="button__break-start" @if(!$buttonStates->break_start) disabled @endif>
+                休憩開始
+            </button>
         </form>
         <form action="{{ route('break.end') }}" method="POST">
             @csrf
-            <button class="button__break-end">休憩終了</button>
+            <button class="button__break-end" @if(!$buttonStates->break_end) disabled @endif>
+                休憩終了
+            </button>
         </form>
     </div>
 </div>

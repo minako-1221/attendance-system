@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Events\Verified;
 
 class VerificationController extends Controller
@@ -15,7 +16,12 @@ class VerificationController extends Controller
         //$user = User::findOrFail($id);
 
         // 認証されているか、リンクが署名付きか確認
+        //if (!$request->hasValidSignature()) {
+            //return redirect()->route('login')->with('error', '無効な認証リンクです');
+        //}
+
         //if ($user->id !== Auth::id() || !$request->hasValidSignature()) {
+            //Log::warning('不正な認証リンクが試行されました。', ['user_id' => $user->id]);
             //return redirect()->route('login')->with('error', '無効な認証リンクです');
         //}
 
