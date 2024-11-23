@@ -23,7 +23,7 @@
         </div>
         <div class="form__content">
             <div class="form__input">
-                <input type="email" name="email" value="{{old('email')}}" placeholder="メールアドレス" />
+                <input type="text" name="email" value="{{old('email')}}" placeholder="メールアドレス" />
             </div>
             <div class="form__error">
                 @error('email')

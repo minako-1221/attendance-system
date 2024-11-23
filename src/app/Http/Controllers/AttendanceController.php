@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\AttendanceRecord;
 use App\Models\BreakRecord;
+use App\Models\ButtonState;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -14,28 +15,18 @@ class AttendanceController extends Controller
     public function clockIn(Request $request)
     {
         $user = Auth::user();
-        $today = Carbon::today();
+        $today = Carbon::today()->toDateString();
 
-        $currentTime = Carbon::now();
+        AttendanceRecord::firstOrCreate(
+            ['user_id' => $user->id, 'clock_in' => $today],
+            ['clock_in' => Carbon::now()]
+        );
 
-        $attendanceRecord = AttendanceRecord::where('user_id', $user->id)
-            ->whereDate('clock_in', $today)
-            ->first();
-
-        if (!$attendanceRecord) {
-            $attendanceRecord = AttendanceRecord::create([
-                'user_id' => $user->id,
-                'clock_in' => $currentTime,
-            ]);
-
-            session([
-                'clock_in' => true,
-                'clock_out' => false,
-                'break_start' => false,
-                'break_end' => false,
-                'last_date' => $today->toDateString(),
-            ]);
-        }
+        // ボタン状態を更新
+        $buttonState = ButtonState::firstOrCreate(
+            ['user_id' => $user->id, 'date' => $today],
+            ['clock_in' => true, 'clock_out' => false, 'break_start' => false, 'break_end' => false]
+        );
 
         return redirect('/');
     }
@@ -43,23 +34,31 @@ class AttendanceController extends Controller
     public function clockOut(Request $request)
     {
         $user = Auth::user();
+        $today = Carbon::today()->toDateString();
 
-        $attendanceRecord = AttendanceRecord::where('user_id', $user->id)->whereDate('clock_in', Carbon::today())->first();
+        $attendanceRecord = AttendanceRecord::where('user_id', $user->id)
+            ->whereDate('clock_in', $today)
+            ->first();
 
-        if ($attendanceRecord) {
-            $currentTime = Carbon::now();
-            $attendanceRecord->clock_out = $currentTime;
-
+        if ($attendanceRecord && is_null($attendanceRecord->clock_out)) {
+            $attendanceRecord->clock_out = Carbon::now();
             $attendanceRecord->save();
-        }
 
-        session([
-            'clock_in' => false,
-            'clock_out' => true,
-            'break_start' => false,
-            'break_end' => false,
-            'last_date' => Carbon::today()->toDateString(),
-        ]);
+            // ボタン状態を取得
+            $buttonState = ButtonState::where('user_id', $user->id)
+                ->where('date', $today)
+                ->first();
+
+            if ($buttonState) {
+                // ボタン状態を更新
+                $buttonState->update([
+                    'clock_in' => false,
+                    'clock_out' => true,
+                    'break_start' => false,
+                    'break_end' => false
+                ]);
+            }
+        }
 
         return redirect('/');
     }
@@ -67,22 +66,33 @@ class AttendanceController extends Controller
     public function breakStart(Request $request)
     {
         $user = Auth::user();
+        $today = Carbon::today()->toDateString();
 
-        $attendanceRecord = AttendanceRecord::where('user_id', $user->id)->whereDate('clock_in', Carbon::today())->first();
+        $attendanceRecord = AttendanceRecord::where('user_id', $user->id)
+            ->whereDate('clock_in', $today)
+            ->first();
 
-        $breakRecord = new BreakRecord();
-        $breakRecord->attendance_record_id = $attendanceRecord->id;
-        $breakRecord->break_start = Carbon::now();
+        if ($attendanceRecord) {
+            $breakRecord = BreakRecord::create([
+                'attendance_record_id' => $attendanceRecord->id,
+                'break_start' => Carbon::now(),
+            ]);
 
-        $breakRecord->save();
+            // ボタン状態を取得
+            $buttonState = ButtonState::where('user_id', $user->id)
+                ->where('date', $today)
+                ->first();
 
-        session([
-            'clock_in' => false,
-            'clock_out' => false,
-            'break_start' => true,
-            'break_end' => false,
-            'last_date' => Carbon::today()->toDateString(),
-        ]);
+            if ($buttonState) {
+                // ボタン状態を更新
+                $buttonState->update([
+                    'clock_in' => false,
+                    'clock_out' => false,
+                    'break_start' => true,
+                    'break_end' => false
+                ]);
+            }
+        }
 
         return redirect('/');
     }
@@ -90,8 +100,11 @@ class AttendanceController extends Controller
     public function breakEnd(Request $request)
     {
         $user = Auth::user();
+        $today = Carbon::today()->toDateString();
 
-        $attendanceRecord = AttendanceRecord::where('user_id', $user->id)->whereDate('clock_in', Carbon::today())->first();
+        $attendanceRecord = AttendanceRecord::where('user_id', $user->id)
+            ->whereDate('clock_in', $today)
+            ->first();
 
         $breakRecord = BreakRecord::where('attendance_record_id', $attendanceRecord->id)
             ->whereDate('break_start', Carbon::today())
@@ -100,19 +113,23 @@ class AttendanceController extends Controller
             ->first();
 
         if ($breakRecord) {
-            $currentTime = Carbon::now();
-            $breakRecord->break_end = $currentTime;
+            $breakRecord->update(['break_end' => Carbon::now()]);
 
-            $breakRecord->save();
+            // ボタン状態を取得
+            $buttonState = ButtonState::where('user_id', $user->id)
+                ->where('date', $today)
+                ->first();
+
+            if ($buttonState) {
+                // ボタン状態を更新
+                $buttonState->update([
+                    'clock_in' => false,
+                    'clock_out' => false,
+                    'break_start' => false,
+                    'break_end' => true
+                ]);
+            }
         }
-
-        session([
-            'clock_in' => false,
-            'clock_out' => false,
-            'break_start' => false,
-            'break_end' => true,
-            'last_date' => Carbon::today()->toDateString(),
-        ]);
 
         return redirect('/');
     }

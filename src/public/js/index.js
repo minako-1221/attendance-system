@@ -1,63 +1,60 @@
-// サーバーサイドから渡されたボタンの状態をJavaScriptで取得
 window.buttonState = JSON.parse(document.getElementById('button-states').textContent);
 
 document.addEventListener('DOMContentLoaded', function () {
-    // ボタンの状態を更新する関数
+    /**
+     * ボタンの状態を更新する関数
+     * @param {string} buttonClass - ボタンのクラス名
+     * @param {boolean} disabled - ボタンを無効化するかどうか
+     */
     function updateButtonState(buttonClass, state) {
         const button = document.querySelector(buttonClass);
-        if (button) { // ボタンが存在するか確認
+        if (button) {
             button.style.color = state ? 'gray' : 'black';
             button.disabled = state;
         }
     }
 
-    // ダブルクリック防止用の関数
-    function preventDoubleClick(button) {
-        button.disabled = true; // ボタンを無効化
-        setTimeout(() => {
-            button.disabled = false; // クリック後、1秒後にボタンを有効化
-        }, 1000); // 1秒後にボタンを有効化
-    }
+    /**
+     * ボタンの状態をビューに反映する関数
+     */
+    function renderButtonStates() {
+        // ボタンの初期化（すべて無効化）
+        updateButtonState('.button__clock-in', true);
+        updateButtonState('.button__clock-out', true);
+        updateButtonState('.button__break-start', true);
+        updateButtonState('.button__break-end', true);
 
-    // 初期状態のボタンの設定
-    function initializeButtonStates() {
-        // 勤務終了が押されている場合は全てのボタンを無効化
+        // サーバーから渡された状態に基づいてボタンを有効化
         if (window.buttonState.clock_out) {
+            // すべて無効化（勤務終了後）
             updateButtonState('.button__clock-in', true);
             updateButtonState('.button__clock-out', true);
             updateButtonState('.button__break-start', true);
             updateButtonState('.button__break-end', true);
-        }
-        // 勤務開始が押されている場合は勤務終了と休憩開始を有効にする
-        else if (window.buttonState.clock_in) {
-            updateButtonState('.button__clock-in', true);
-            updateButtonState('.button__clock-out', false); // 勤務終了は有効
-            updateButtonState('.button__break-start', false); // 休憩開始は有効
-            updateButtonState('.button__break-end', true);  // 休憩終了は無効
-        }
-        // 休憩開始が押されている場合は休憩終了を有効にする
-        else if (window.buttonState.break_start) {
-            updateButtonState('.button__clock-in', true); // 勤務開始は無効
-            updateButtonState('.button__clock-out', true); // 勤務終了は無効
-            updateButtonState('.button__break-start', true); // 休憩開始は無効
-            updateButtonState('.button__break-end', false);   // 休憩終了は有効
-        }
-        // 休憩終了が押されている場合は勤務終了と休憩開始を有効にする
-        else if (window.buttonState.break_end) {
-            updateButtonState('.button__clock-in', true); // 勤務開始は無効
-            updateButtonState('.button__clock-out', false); // 勤務終了は有効
-            updateButtonState('.button__break-start', false); // 休憩開始は有効
-            updateButtonState('.button__break-end', true);  // 休憩終了は無効
-        }
-        // 全てのボタンがデフォルト状態 (出勤前)
-        else {
-            updateButtonState('.button__clock-in', false);  // 勤務開始のみ有効
-            updateButtonState('.button__clock-out', true);
-            updateButtonState('.button__break-start', true);
-            updateButtonState('.button__break-end', true);
+        } else if (window.buttonState.break_end) {
+            updateButtonState('.button__clock-out', false);
+            updateButtonState('.button__break-start', false);
+        } else if (window.buttonState.break_start) {
+            updateButtonState('.button__break-end', false);
+        } else if (window.buttonState.clock_in) {
+            updateButtonState('.button__clock-out', false);
+            updateButtonState('.button__break-start', false);
+        } else {
+            updateButtonState('.button__clock-in', false);
         }
     }
 
-    // ボタン状態を初期化
-    initializeButtonStates();
+    /**
+     * ダブルクリック防止用の関数
+     * @param {HTMLElement} button - クリックされたボタン
+     */
+    function preventDoubleClick(button) {
+        button.disabled = true;
+        setTimeout(() => {
+            button.disabled = false;
+        }, 1000);
+    }
+
+    // ボタンの状態をビューに反映
+    renderButtonStates();
 });

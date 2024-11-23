@@ -29,6 +29,7 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => array_merge($this->passwordRules(), ['confirmed']),
+            'password_confirmation' => ['required'],
         ])->validate();
 
         return User::create([
@@ -36,5 +37,6 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+
     }
 }
