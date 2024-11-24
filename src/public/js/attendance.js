@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const attendanceTable = doc.querySelector('.attendance-table');
                 const pagination = doc.querySelector('.pagination');
 
-                // 必要なHTML要素が存在する場合のみ更新
                 if (attendanceTable) {
                     document.querySelector('.attendance-table').innerHTML = attendanceTable.innerHTML;
                 } else {

@@ -26,21 +26,20 @@ class FortifyServiceProvider extends ServiceProvider
     {
         $this->app->singleton(LoginResponseContract::class, function () {
 
-            //return new class implements LoginResponseContract {
-                //public function toResponse($request)
-                //{
-                    // 認証済みかどうかを確認
-                    //if (Auth::check() && !Auth::user()->hasVerifiedEmail()) {
-                    //Auth::logout(); // ログアウト
+            return new class implements LoginResponseContract {
+                public function toResponse($request)
+                    {
+                        // 認証済みかどうかを確認
+                        //if (Auth::check() && !Auth::user()->hasVerifiedEmail()) {
+                        //Auth::logout(); // ログアウト
 
-                    //return redirect()->route('verification.notice')
-                    //->with('status', 'メール確認が必要です。リンクを確認して再度ログインしてください。');
-                    //}
+                        //return redirect()->route('verification.notice')
+                        //->with('status', 'メール確認が必要です。リンクを確認して再度ログインしてください。');
+                        //}
 
-                    return redirect()->route('login'); // ログインページにリダイレクト
-
-                //}
-            //};
+                        return redirect()->route('login');
+                    }
+                };
         });
     }
 
@@ -69,21 +68,17 @@ class FortifyServiceProvider extends ServiceProvider
             $user = \App\Models\User::where('email', $request->email)->first();
 
             if (!$user) {
-                // メールアドレスが登録されていない場合
                 throw ValidationException::withMessages([
                     'email' => '会員登録されていないメールアドレスです。',
                 ]);
             }
 
-            // パスワードが正しいかチェック
             if (!Hash::check($request->password, $user->password)) {
-                // パスワードが間違っている場合
                 throw ValidationException::withMessages([
                     'password' => 'パスワードが間違っています。',
                 ]);
             }
 
-            // ログインが成功した場合、ユーザーを返す
             return $user;
         });
 

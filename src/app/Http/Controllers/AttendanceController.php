@@ -17,12 +17,18 @@ class AttendanceController extends Controller
         $user = Auth::user();
         $today = Carbon::today()->toDateString();
 
-        AttendanceRecord::firstOrCreate(
+        $attendanceRecord=AttendanceRecord::firstOrCreate(
             ['user_id' => $user->id, 'clock_in' => $today],
             ['clock_in' => Carbon::now()]
         );
 
-        // ボタン状態を更新
+        if (!$attendanceRecord) {
+            $attendanceRecord = AttendanceRecord::create([
+                'user_id' => $user->id,
+                'clock_in' => Carbon::now(),
+            ]);
+        }
+
         $buttonState = ButtonState::firstOrCreate(
             ['user_id' => $user->id, 'date' => $today],
             ['clock_in' => true, 'clock_out' => false, 'break_start' => false, 'break_end' => false]
@@ -44,13 +50,11 @@ class AttendanceController extends Controller
             $attendanceRecord->clock_out = Carbon::now();
             $attendanceRecord->save();
 
-            // ボタン状態を取得
             $buttonState = ButtonState::where('user_id', $user->id)
                 ->where('date', $today)
                 ->first();
 
             if ($buttonState) {
-                // ボタン状態を更新
                 $buttonState->update([
                     'clock_in' => false,
                     'clock_out' => true,
@@ -78,13 +82,11 @@ class AttendanceController extends Controller
                 'break_start' => Carbon::now(),
             ]);
 
-            // ボタン状態を取得
             $buttonState = ButtonState::where('user_id', $user->id)
                 ->where('date', $today)
                 ->first();
 
             if ($buttonState) {
-                // ボタン状態を更新
                 $buttonState->update([
                     'clock_in' => false,
                     'clock_out' => false,
@@ -115,13 +117,11 @@ class AttendanceController extends Controller
         if ($breakRecord) {
             $breakRecord->update(['break_end' => Carbon::now()]);
 
-            // ボタン状態を取得
             $buttonState = ButtonState::where('user_id', $user->id)
                 ->where('date', $today)
                 ->first();
 
             if ($buttonState) {
-                // ボタン状態を更新
                 $buttonState->update([
                     'clock_in' => false,
                     'clock_out' => false,
